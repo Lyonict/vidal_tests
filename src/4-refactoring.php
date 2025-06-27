@@ -40,29 +40,30 @@ class Product
     public function __construct($pIdProduct)
     {
         $this->id = $pIdProduct;
-        $this->ApiCall();
+        $this->apiCall();
     }
 
-    public function ApiCall($pIdProduct = null)
+    private function apiCall()
     {
-        $url = "https://api.vidal.fr/rest/api/product/" . $this->id;
+        $url = "https://api.vidal.fr/rest/api/product/$this->id";
         $ch = curl_init();
-        curlsetopt($ch, CURLOPT_URL, $url);
-        curlsetopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $res = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
         if ($httpCode >= 400) {
             trigger_error('API Call error', E_USER_WARNING);
             return;
         }
+
         $xml = simplexml_load_string($res);
-        $this->id = strval($xml->entry->id);
-        if (isset($xml->entry->name)) {
-            $this->name;
-        }
-        $this->marketStatus = (string) $xml->entry->marketStatus;
-        $this->molecules = $xml->entry->molecules;
-        $this->classifications = $xml->entry->classifications;
+        $this->setId(strval($xml->entry->id));
+        $this->setName(isset($xml->entry->name) ? (string) $xml->entry->name : '');
+        $this->setMarketStatus((string) $xml->entry->marketStatus);
+        $this->setMolecules((array) $xml->entry->molecules);
+        $this->setClassifications((array) $xml->entry->classifications);
     }
 
     public function getId()
