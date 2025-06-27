@@ -18,22 +18,26 @@ First thoughts :
 - also, should $name be allowed to be null ?
 - getters should probably be in the same order as the properties
 - also, we barely have setters
+
+I'm gonna assume that we are at least in the last version of PHP 7, which support typing
+
+Not totally sure what's the best way to handle the "name" property. It really shouldn't be nullable
 */
 
 class Product
 {
 
-    public $id = null;
+    private int $id;
 
-    public $name = "";
+    private string $name = "";
 
-    public $marketStatus = null;
+    private ?string $marketStatus = null;
 
-    public $molecules = [];
+    private ?array $molecules = [];
 
-    public $classifications = [];
+    private ?array $classifications = [];
 
-    public function __construct($pIdProduct = null)
+    public function __construct($pIdProduct)
     {
         $this->id = $pIdProduct;
         $this->ApiCall();
@@ -61,10 +65,14 @@ class Product
         $this->classifications = $xml->entry->classifications;
     }
 
+    public function getId()
+    {
+        return $this->id;
+    }
+
     public function setId($pIdProduct)
     {
         $this->id = $pIdProduct;
-        $this->ApiCall();
     }
 
     public function getName()
@@ -72,9 +80,19 @@ class Product
         return $this->name;
     }
 
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
     public function getMarketStatus()
     {
         return $this->marketStatus;
+    }
+
+    public function setMarketStatus($marketStatus)
+    {
+        $this->marketStatus = $marketStatus;
     }
 
     public function getMolecules()
@@ -82,9 +100,19 @@ class Product
         return $this->molecules;
     }
 
+    public function setMolecules($molecules)
+    {
+        $this->molecules = $molecules;
+    }
+
     public function getClassifications()
     {
         return $this->classifications;
+    }
+
+    public function setClassifications($classifications)
+    {
+        $this->classifications = $classifications;
     }
 }
 
