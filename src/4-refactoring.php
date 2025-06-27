@@ -66,52 +66,52 @@ class Product
         $this->setClassifications((array) $xml->entry->classifications);
     }
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function setId($pIdProduct)
+    public function setId(int $pIdProduct): void
     {
         $this->id = $pIdProduct;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    public function getMarketStatus()
+    public function getMarketStatus(): string|null
     {
         return $this->marketStatus;
     }
 
-    public function setMarketStatus($marketStatus)
+    public function setMarketStatus(?string $marketStatus): void
     {
         $this->marketStatus = $marketStatus;
     }
 
-    public function getMolecules()
+    public function getMolecules(): array|null
     {
         return $this->molecules;
     }
 
-    public function setMolecules($molecules)
+    public function setMolecules(?array $molecules): void
     {
         $this->molecules = $molecules;
     }
 
-    public function getClassifications()
+    public function getClassifications(): array|null
     {
         return $this->classifications;
     }
 
-    public function setClassifications($classifications)
+    public function setClassifications(?array $classifications): void
     {
         $this->classifications = $classifications;
     }
