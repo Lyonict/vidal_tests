@@ -118,6 +118,5 @@ class Product
 }
 
 $product = new Product(5485);
-$product->setId(5485);
 echo "<b>Nom</b> : " . $product->getName() . "<br/>";
 echo "<b>Status de commercialisation</b> : " . $product->getMarketStatus() . "<br/>";
