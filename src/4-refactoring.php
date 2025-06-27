@@ -24,6 +24,8 @@ I'm gonna assume that we are at least in the last version of PHP 7, which suppor
 Not totally sure what's the best way to handle the "name" property. It really shouldn't be nullable
 */
 
+require_once __DIR__ . '/ApiService.php';
+
 class Product
 {
 
@@ -37,33 +39,11 @@ class Product
 
     private ?array $classifications = [];
 
-    public function __construct($pIdProduct)
+    public function __construct(int $pIdProduct)
     {
         $this->id = $pIdProduct;
-        $this->apiCall();
-    }
-
-    private function apiCall()
-    {
-        $url = "https://api.vidal.fr/rest/api/product/$this->id";
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $res = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
-        if ($httpCode >= 400) {
-            trigger_error('API Call error', E_USER_WARNING);
-            return;
-        }
-
-        $xml = simplexml_load_string($res);
-        $this->setId(strval($xml->entry->id));
-        $this->setName(isset($xml->entry->name) ? (string) $xml->entry->name : '');
-        $this->setMarketStatus((string) $xml->entry->marketStatus);
-        $this->setMolecules((array) $xml->entry->molecules);
-        $this->setClassifications((array) $xml->entry->classifications);
+        $apiService = new ApiService;
+        $apiService->apiCall($this);
     }
 
     public function getId(): int
