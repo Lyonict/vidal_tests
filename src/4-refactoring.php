@@ -29,17 +29,17 @@ class Product
 
     public $marketStatus = null;
 
-    public $molecules = array();
+    public $molecules = [];
 
     public $classifications = [];
 
     public function __construct($pIdProduct = null)
     {
         $this->id = $pIdProduct;
-        $this->appelAPI();
+        $this->ApiCall();
     }
 
-    public function appelAPI($pIdProduct = null)
+    public function ApiCall($pIdProduct = null)
     {
         $url = "https://api.vidal.fr/rest/api/product/" . $this->id;
         $ch = curl_init();
@@ -54,22 +54,22 @@ class Product
         $xml = simplexml_load_string($res);
         $this->id = strval($xml->entry->id);
         if (isset($xml->entry->name)) {
-            $this->nom;
+            $this->name;
         }
         $this->marketStatus = (string) $xml->entry->marketStatus;
         $this->molecules = $xml->entry->molecules;
         $this->classifications = $xml->entry->classifications;
     }
 
-    private function getname()
-    {
-        return $this->nom;
-    }
-
     public function setId($pIdProduct)
     {
         $this->id = $pIdProduct;
-        $this->appelAPI();
+        $this->ApiCall();
+    }
+
+    public function getName()
+    {
+        return $this->name;
     }
 
     public function getMarketStatus()
@@ -77,12 +77,12 @@ class Product
         return $this->marketStatus;
     }
 
-    function getMolecules()
+    public function getMolecules()
     {
         return $this->molecules;
     }
 
-    protected function getClassifications()
+    public function getClassifications()
     {
         return $this->classifications;
     }
@@ -90,5 +90,5 @@ class Product
 
 $product = new Product(5485);
 $product->setId(5485);
-echo "<b>Name</b> : " . $product->getNom() . "<br/>";
+echo "<b>Nom</b> : " . $product->getName() . "<br/>";
 echo "<b>Status de commercialisation</b> : " . $product->getMarketStatus() . "<br/>";
