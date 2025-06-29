@@ -1,38 +1,27 @@
 <?php
 
 // Not sure if there's a better way to handle errors for a curl call...
+// Thinking on it, maybe VidalApiService should be inheriting ApiClient ?
+// But maybe there's better practice...
 
+require_once __DIR__ . '/ApiClient.php';
 class VidalApiService
 {
-    public function apiCall(Product $product): void
+    private ApiClient $client;
+
+    public function __construct()
+    {
+        $this->client = new ApiClient();
+    }
+
+    public function fetchProduct(Product $product): void
     {
         $url = "https://api.vidal.fr/rest/api/product/{$product->getId()}";
-        $ch = curl_init();
-        curl_setopt_array($ch, [
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true
-            // We would also add the api token here
-        ]);
-        $res = curl_exec($ch);
+        $response = $this->client->get($url);
 
-        if (!$res) {
-            $error = curl_error($ch);
-            curl_close($ch);
-            trigger_error('Curl error', E_USER_WARNING);
-            return;
-        }
-
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
-        if ($httpCode >= 400) {
-            trigger_error('API Call error', E_USER_WARNING);
-            return;
-        }
-        $xml = simplexml_load_string($res);
+        $xml = simplexml_load_string($response);
         if ($xml === false) {
-            trigger_error('Invalid XML response', E_USER_WARNING);
-            return;
+            throw new \RuntimeException('Invalid XML response');
         }
 
         $product->setId(strval($xml->entry->id));
@@ -40,5 +29,12 @@ class VidalApiService
         $product->setMarketStatus((string) $xml->entry->marketStatus);
         $product->setMolecules((array) $xml->entry->molecules);
         $product->setClassifications((array) $xml->entry->classifications);
+
+        // Test data values, for verification purposes
+        // $product->setId(strval(5485));
+        // $product->setName("Bidule");
+        // $product->setMarketStatus("Available");
+        // $product->setMolecules(["foo", "bar"]);
+        // $product->setClassifications(["Baz", "Buz"]);
     }
 }

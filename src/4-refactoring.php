@@ -42,8 +42,8 @@ class Product
     public function __construct(int $pIdProduct)
     {
         $this->id = $pIdProduct;
-        $apiService = new VidalApiService;
-        $apiService->apiCall($this);
+        $vidalApiService = new VidalApiService;
+        $vidalApiService->fetchProduct($this);
     }
 
     public function getId(): int
