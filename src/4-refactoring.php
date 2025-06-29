@@ -24,7 +24,7 @@ I'm gonna assume that we are at least in the last version of PHP 7, which suppor
 Not totally sure what's the best way to handle the "name" property. It really shouldn't be nullable
 */
 
-require_once __DIR__ . '/ApiService.php';
+require_once __DIR__ . '/VidalApiService.php';
 
 class Product
 {
@@ -42,7 +42,7 @@ class Product
     public function __construct(int $pIdProduct)
     {
         $this->id = $pIdProduct;
-        $apiService = new ApiService;
+        $apiService = new VidalApiService;
         $apiService->apiCall($this);
     }
 

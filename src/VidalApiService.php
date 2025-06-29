@@ -2,7 +2,7 @@
 
 // Not sure if there's a better way to handle errors for a curl call...
 
-class ApiService
+class VidalApiService
 {
     public function apiCall(Product $product): void
     {
